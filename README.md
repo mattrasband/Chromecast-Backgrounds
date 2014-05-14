@@ -27,3 +27,9 @@ You can customize the bahavior based on a few command line arguments, all of whi
 ## Planned additions
 
 * Automatically set up a system to use these images as a background slideshow (optionally)
+* Android background changer (similar to [Muzei](https://github.com/romannurik/muzei)), possibly
+
+## Thanks To
+
+* If you like any of the backgrounds, be sure to thank the creator (EXIF data should contain up-to-date info as of download time).
+* Check out the [dconnolly/Chromecast-Backgrounds](https://github.com/dconnolly/Chromecast-Backgrounds) project, I retrieved the URL from there and wanted to expand the scope a bit beyond what that project is doing.
