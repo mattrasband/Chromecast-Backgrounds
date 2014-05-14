@@ -74,7 +74,7 @@ public class Main {
 								if (settings.applyWatermark()) {
 									image = Images.applyWatermark(image, bg.author);
 								}
-								Images.saveImage(image, saveFile.toString());
+								Images.saveImageAsJpg(image, saveFile.toString(), 1.0f);
 							}
 						}
 					);

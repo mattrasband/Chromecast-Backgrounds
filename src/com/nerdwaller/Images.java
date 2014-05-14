@@ -16,7 +16,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.FileImageOutputStream;
 
 
 public class Images {
@@ -55,16 +59,26 @@ public class Images {
 	}
 	
 	/**
-	 * Save the image as a JPG type.
-	 * @param image The Image object to save.
-	 * @param path The path, including name and extension, to save the image as.
-	 * @return True if the save was successful, false if not.
+	 * Save an image as a JPG with a specified quality setting..
+	 * @param image The image object to save.
+	 * @param path Path to save the file as, including the file name and extension.
+	 * @param quality Image quality in the range 0.0-1.0.  1.0 is least compression, best quality.
+	 * @return True if the image was saved, false if an error occurred.
 	 */
-	public static Boolean saveImage(BufferedImage image, String path) {
+	public static Boolean saveImageAsJpg(BufferedImage image, String path, float quality) {
 		Boolean success = false;
+		ImageWriter writer = ImageIO.getImageWritersByFormatName("jpeg").next();
+		ImageWriteParam param = writer.getDefaultWriteParam();
+		param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+		param.setCompressionQuality(quality);
+		
 		try {
-			ImageIO.write(image, "JPG", new File(path));
-			success = true;
+			File outFile = new File(path);
+			FileImageOutputStream output = new FileImageOutputStream(outFile);
+			writer.setOutput(output);
+			IIOImage outImage = new IIOImage(image, null, null);
+			writer.write(null, outImage, param);
+			writer.dispose();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
