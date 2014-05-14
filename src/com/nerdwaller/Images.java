@@ -79,6 +79,7 @@ public class Images {
 			IIOImage outImage = new IIOImage(image, null, null);
 			writer.write(null, outImage, param);
 			writer.dispose();
+            success = true;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
