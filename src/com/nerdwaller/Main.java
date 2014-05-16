@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -107,11 +108,13 @@ public class Main {
 	private static final Options createOptions() {
 		Options options = new Options();
 		
+		Option help = new Option("help", "Print this message");
 		Option settingsFile = new Option("settings", true, "Load settings from a file.");
 		Option outputDirectory = new Option("outdir", true, "Output directory");
 		Option applyWatermark = new Option("watermark", false, "Apply the author's name as a watermark");
 		Option applyGradient = new Option("gradient", false, "Overlay a gradient (attempts to match the Chromecast's display of images)");
 		
+		options.addOption(help);
 		options.addOption(settingsFile);
 		options.addOption(outputDirectory);
 		options.addOption(applyWatermark);
@@ -141,8 +144,14 @@ public class Main {
 				CommandLineParser parser = new BasicParser();
 				CommandLine cli = parser.parse(options, args);
 				
+				// Only show the help info
+				if (cli.hasOption("help")) {
+					HelpFormatter helpFormatter = new HelpFormatter();
+					helpFormatter.printHelp("Chromecast-Backgrounds", options);
+					System.exit(0);
+				}
 				// Load from a settings file.  If provided, other args are ignored.
-				if (cli.hasOption("settings")) {
+				else if (cli.hasOption("settings")) {
 					settings = new Settings(cli.getOptionValue("settings"));
 				}
 				// Load from the provided switches.
