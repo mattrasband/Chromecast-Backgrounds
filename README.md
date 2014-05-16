@@ -10,6 +10,7 @@ At any given time, the chromecast homepage displays 100 images that it will rota
 
 You can customize the bahavior based on a few command line arguments, all of which are optional:
 
+* `help`:  Show the usage/help info for the command line arguments.
 * `settings`:  You can provide a string, which will be treated as the path to a settings file.  If this is provided, no other arguments will be applied.  This file can have the following (where "Boolean" is actually "true" or "false"):
     * ApplyWatermark=Boolean
     * ApplyGradient=Boolean
