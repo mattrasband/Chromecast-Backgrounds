@@ -22,4 +22,14 @@ public class Background {
 	public String getName() {
 		return FilenameUtils.getBaseName(href).replace("%2B", "").replace("%2", "") + ".jpg";
 	}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Background)) {
+            return false;
+        }
+        Background otherBg = (Background) obj;
+
+        return (href.equals(otherBg.getHref()) && author.equals(otherBg.getAuthor()));
+    }
 }

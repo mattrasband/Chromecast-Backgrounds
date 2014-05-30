@@ -2,8 +2,10 @@ package com.nerdwaller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -19,6 +21,8 @@ import org.apache.commons.cli.ParseException;
  * Backgrounds can also have a watermark applied to the bottom right corner.
  */
 public class Main {
+
+    private static int totalDownloads = 0;
 
 	/**
 	 * Find, download, and optionally watermark/apply gradient to the chromecast backgrounds.
@@ -43,8 +47,15 @@ public class Main {
 		// Get a list of background currently displayed on the Chromecast's homepage (only ever
 		// gives 100, but there appear to be well over 500 individual images and growing).
 		System.out.print("Searching for backgrounds...");
-		Chromecast cc = new Chromecast();
-		List<Background> bgs = cc.getBackgrounds();
+		Chromecast cc = null;
+        try {
+            cc = new Chromecast();
+        } catch (MalformedURLException e) {
+            System.out.println("The Chromecast URL is malformed, they must have moved the page.");
+            System.exit(1);
+        }
+
+		List<Background> bgs = cc.getAllBackgrounds();
 		System.out.println(" " + bgs.size() + " found.");
 		
 		// Create the save path if necessary
@@ -53,13 +64,13 @@ public class Main {
 			savePath.mkdirs();
 		}
 		
-		Boolean foundNew = false;
+		boolean foundNew = false;
 		
 		System.out.println("Checking for new images...");
 		
 		// Loop through all found backgrounds checking if the image has already been downloaded.
 		// If not, thread out the download and processing (gradient/watermark if applied) of images.
-		List<Thread> threads = new ArrayList<Thread>();
+        ExecutorService executor = Executors.newFixedThreadPool(10);
 		for (final Background bg : bgs) {
 			final File saveFile = new File(settings.savePath() + bg.getName());
 			if (!saveFile.exists()) {
@@ -69,33 +80,35 @@ public class Main {
 						new Runnable() {
 							public void run() {
 								BufferedImage image = Images.downloadImage(bg.getHref());
-								if (settings.applyGradient()) {
-									image = Images.overlayGradient(image);
-								}
-								if (settings.applyWatermark()) {
-									image = Images.applyWatermark(image, bg.author);
-								}
-								Images.saveImageAsJpg(image, saveFile.toString(), 1.0f);
+                                if (image != null) {
+                                    if (settings.applyGradient()) {
+                                        image = Images.overlayGradient(image);
+                                    }
+                                    if (settings.applyWatermark()) {
+                                        image = Images.applyWatermark(image, bg.author);
+                                    }
+                                    if (Images.saveImageAsJpg(image, saveFile.toString(), 1.0f)) {
+                                        markDownloaded();
+                                    }
+                                }
 							}
 						}
-					);
-				t.start();
-				threads.add(t);
+                );
+                executor.execute(t);
 			}
 		}
+
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+            // Spin until all threaded items are completed.
+        }
+
 		
 		if (!foundNew) {
-			System.out.println("No new images found.");
-		}
-		
-		// Wait for all threads to complete.
-		for (Thread t : threads) {
-			try {
-				t.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+            System.out.println("No new images found.");
+        } else {
+            System.out.println(String.format("Found %s new images.", totalDownloads));
+        }
 		
 		System.out.println("Finished.");
 	}
@@ -166,4 +179,8 @@ public class Main {
 		
 		return settings;
 	}
+
+    private static void markDownloaded() {
+        totalDownloads++;
+    }
 }

@@ -53,7 +53,8 @@ public class Images {
 			image = ImageIO.read(new URL(url));
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+            // Skip it, it probably doesn't matter for now.
+			//e.printStackTrace();
 		}
 		return image;
 	}

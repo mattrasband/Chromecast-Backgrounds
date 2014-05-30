@@ -6,21 +6,54 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Chromecast {
+
+    /**
+     * Quality settings for the background image.  They may not actually be
+     * 720px, 1920px and 2560px, but that's what the url wants.
+     */
+    public enum Quality {
+        HIGH("s2560"),
+        MEDIUM("s1920"),
+        LOW("S720");
+
+        private String value;
+
+        private Quality(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+    }
+
 	protected URL backgroundUrl;
-	
-	public Chromecast() {
-		try {
-			backgroundUrl = new URL("https://clients3.google.com/cast/chromecast/home/v/c9541b08");
-		}
-		catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+    protected Quality imageQuality;
+
+    /**
+     * Default constructor uses High Quality for the images.
+     * @throws MalformedURLException
+     */
+	public Chromecast() throws MalformedURLException {
+		this(Quality.HIGH);
 	}
+
+    /**
+     * Optionally define the quality of images.  Use lower quality to save space.
+     * @param quality (Quality) - The quality of the image to download.
+     * @throws MalformedURLException
+     */
+    public Chromecast(Quality quality) throws MalformedURLException {
+        backgroundUrl = new URL("https://clients3.google.com/cast/chromecast/home/v/c9541b08");
+        imageQuality = quality;
+    }
 	
 	/**
 	 * Get a list of all backgrounds that are currently listed on the Chromecast page.
@@ -31,6 +64,32 @@ public class Chromecast {
 		List<Background> backgrounds = parseBackgrounds(html);
 		return backgrounds;
 	}
+
+    /**
+     * Tries to get all possible backgrounds.  This iterates over the page several times trying to find all
+     * images.  It may not actually get all, but it should be fairly close.
+     * @return (List<Background>)
+     */
+    public List<Background> getAllBackgrounds() {
+        List<Background> backgrounds = new ArrayList<>();
+        final int maxIters = 30;
+        int timesWithoutResults = 0;
+
+        for (int i = 0; i < maxIters && (timesWithoutResults <= 5); i++) {
+            List<Background> bgs = parseBackgrounds(getPageSource());
+            if (bgs.size() == 0) {
+                timesWithoutResults++;
+            } else {
+                for (Background bg : bgs) {
+                    if (!backgrounds.contains(bg)) {
+                        backgrounds.add(bg);
+                    }
+                }
+            }
+        }
+
+        return backgrounds;
+    }
 	
 	/**
 	 * Get the source of the chromecast background page.
