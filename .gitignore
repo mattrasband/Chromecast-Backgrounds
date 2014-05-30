@@ -7,4 +7,5 @@
 .project
 .classpath
 
-bin/
+bin/com/
+bin/META-INF/
