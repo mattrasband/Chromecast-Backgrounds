@@ -6,6 +6,11 @@ This program will download the best quality found, but not all are fantastic qua
 
 At any given time, the chromecast homepage displays 100 images that it will rotate through.  However, each run of the program may find more (as the page is dynamic and growing).  So far, I have seen over 500 unique images used and they are all suitable for a solid background slideshow..
 
+## Requirements
+
+* JRE 1.7 to run the [jar](https://github.com/nerdwaller/Chromecast-Backgrounds-Binaries)
+* JDK 1.7 to compile
+
 ## Use
 
 You can customize the bahavior based on a few command line arguments, all of which are optional:

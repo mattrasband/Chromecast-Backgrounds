@@ -13,7 +13,7 @@ public class Settings {
 	private Boolean applyGradient;
 	private Boolean applyWatermark;
 	private String savePath;
-	
+
 	/**
 	 * Create the settings object with the default settings.
 	 */

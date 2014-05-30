@@ -43,7 +43,7 @@ public class Main {
 		System.out.println("\tSaving to: " + settings.savePath());
 		System.out.println("\tAdding Gradient: " + settings.applyGradient());
 		System.out.println("\tApplying Watermark: " + settings.applyWatermark() + "\n");
-		
+
 		// Get a list of background currently displayed on the Chromecast's homepage (only ever
 		// gives 100, but there appear to be well over 500 individual images and growing).
 		System.out.print("Searching for backgrounds...");
@@ -122,11 +122,11 @@ public class Main {
 		Options options = new Options();
 		
 		Option help = new Option("help", "Print this message");
-		Option settingsFile = new Option("settings", true, "Load settings from a file.");
-		Option outputDirectory = new Option("outdir", true, "Output directory");
+		Option settingsFile = new Option("settings", true, "Load settings from the specified file");
+		Option outputDirectory = new Option("outdir", true, "Output directory path");
 		Option applyWatermark = new Option("watermark", false, "Apply the author's name as a watermark");
 		Option applyGradient = new Option("gradient", false, "Overlay a gradient (attempts to match the Chromecast's display of images)");
-		
+
 		options.addOption(help);
 		options.addOption(settingsFile);
 		options.addOption(outputDirectory);

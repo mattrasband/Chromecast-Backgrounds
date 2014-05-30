@@ -20,7 +20,7 @@ public class Background {
 	}
 	
 	public String getName() {
-		return FilenameUtils.getBaseName(href).replace("%2B", "").replace("%2", "") + ".jpg";
+		return FilenameUtils.getBaseName(href).replace("%2B", "").replace("%2", "") + "." + FilenameUtils.getExtension(href).toLowerCase();
 	}
 
     @Override

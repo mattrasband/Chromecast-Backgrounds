@@ -12,45 +12,14 @@ import java.util.regex.Pattern;
 
 public class Chromecast {
 
-    /**
-     * Quality settings for the background image.  They may not actually be
-     * 720px, 1920px and 2560px, but that's what the url wants.
-     */
-    public enum Quality {
-        HIGH("s2560"),
-        MEDIUM("s1920"),
-        LOW("S720");
-
-        private String value;
-
-        private Quality(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return this.value;
-        }
-    }
-
 	protected URL backgroundUrl;
-    protected Quality imageQuality;
-
-    /**
-     * Default constructor uses High Quality for the images.
-     * @throws MalformedURLException
-     */
-	public Chromecast() throws MalformedURLException {
-		this(Quality.HIGH);
-	}
 
     /**
      * Optionally define the quality of images.  Use lower quality to save space.
-     * @param quality (Quality) - The quality of the image to download.
      * @throws MalformedURLException
      */
-    public Chromecast(Quality quality) throws MalformedURLException {
+    public Chromecast() throws MalformedURLException {
         backgroundUrl = new URL("https://clients3.google.com/cast/chromecast/home/v/c9541b08");
-        imageQuality = quality;
     }
 	
 	/**
@@ -126,7 +95,7 @@ public class Chromecast {
 		String cleanedHref;
 		while (m.find()) {
 			splitString = m.group(1).split(",");
-			cleanedHref = splitString[0].replace("s1280-w1280-c-h720", imageQuality.getValue());
+			cleanedHref = splitString[0].replace("s1280-w1280-c-h720", "s2560");
 			backgroundList.add(new Background(cleanedHref, splitString[1]));
 		}
 		
