@@ -6,9 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,7 +126,7 @@ public class Chromecast {
 		String cleanedHref;
 		while (m.find()) {
 			splitString = m.group(1).split(",");
-			cleanedHref = splitString[0].replace("s1280-w1280-c-h720", "s2560");
+			cleanedHref = splitString[0].replace("s1280-w1280-c-h720", imageQuality.getValue());
 			backgroundList.add(new Background(cleanedHref, splitString[1]));
 		}
 		
