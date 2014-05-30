@@ -8,7 +8,7 @@ At any given time, the chromecast homepage displays 100 images that it will rota
 
 ## Requirements
 
-* JRE 1.7 to run the [jar](https://github.com/nerdwaller/Chromecast-Backgrounds-Binaries)
+* JRE 1.7 to run the [jar (executable binary file)](https://github.com/nerdwaller/Chromecast-Backgrounds/blob/master/bin/ChromecastBackground.jar)
 * JDK 1.7 to compile
 
 ## Use
